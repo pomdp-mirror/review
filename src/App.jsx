@@ -2,17 +2,30 @@ import { useEffect, useState } from 'react'
 import './App.css'
 
 const teaserFrameCount = 24
-const teaserImageBase = '/imgs/drawer_open_seed_2_sample_128'
-const staticObservationFrame = `${teaserImageBase}/Obs_Group_obs_raw_agentview_image.png`
-const staticActionFrame = `${teaserImageBase}/Act_Group_act_agentview_image.png`
-const animatedObservationFrames = Array.from(
-  { length: teaserFrameCount },
-  (_, index) => `${teaserImageBase}/Obs_Group_obs_raw_${index}_agentview_image.png`,
-)
-const animatedActionFrames = Array.from(
-  { length: teaserFrameCount },
-  (_, index) => `${teaserImageBase}/Act_Group_act_${index}_agentview_image.png`,
-)
+
+const imgBase = `${import.meta.env.BASE_URL}imgs`
+
+const teaserTasks = [
+  { id: 'drawer_open', label: 'Drawer Opening', folder: 'drawer_open_seed_5_sample_288' },
+  { id: 'drawer_close', label: 'Drawer Closing', folder: 'drawer_close_seed4_sample_488' },
+  { id: 'cube_drop', label: 'Cube Dropping', folder: 'cube_drop_seed_5_sample_16' },
+  { id: 'hammer_lift', label: 'Hammer Lifting', folder: 'hammer_lift_seed4_sample_376' },
+].map((task) => {
+  const base = `${imgBase}/${task.folder}`
+  return {
+    ...task,
+    staticObservation: `${base}/Obs_Group_obs_raw_agentview_image.png`,
+    staticAction: `${base}/Act_Group_act_agentview_image.png`,
+    animatedObservations: Array.from(
+      { length: teaserFrameCount },
+      (_, index) => `${base}/Obs_Group_obs_raw_${index}_agentview_image.png`,
+    ),
+    animatedActions: Array.from(
+      { length: teaserFrameCount },
+      (_, index) => `${base}/Act_Group_act_${index}_agentview_image.png`,
+    ),
+  }
+})
 
 const authors = [
   { name: 'First Author', affiliation: '1', href: '#' },
@@ -28,38 +41,26 @@ const links = [
   { label: 'Data', href: '#', iconClass: 'fas fa-database' },
 ]
 
-const highlights = [
-  {
-    title: 'Simple Setup',
-    text: 'A compact research website structure with the sections readers expect: paper details, overview, findings, and citation.',
-  },
-  {
-    title: 'Reusable Style',
-    text: 'Local CSS recreates the clean academic layout, green author links, rounded dark buttons, and roomy section spacing.',
-  },
-  {
-    title: 'No Extra Packages',
-    text: 'The page uses the existing Vite and React setup only, so it stays easy to customize and deploy.',
-  },
-]
-
 function App() {
   const [teaserAngleStep, setTeaserAngleStep] = useState(0)
   const [isTeaserPlaying, setIsTeaserPlaying] = useState(true)
+  const [selectedTaskId, setSelectedTaskId] = useState(teaserTasks[0].id)
   const teaserFrameIndex = teaserAngleStep % teaserFrameCount
   const reflectionAngle = teaserAngleStep * (360 / teaserFrameCount)
+  const currentTask = teaserTasks.find((task) => task.id === selectedTaskId) ?? teaserTasks[0]
 
   useEffect(() => {
-    const teaserFrames = [
-      staticObservationFrame,
-      staticActionFrame,
-      ...animatedObservationFrames,
-      ...animatedActionFrames,
-    ]
-
-    teaserFrames.forEach((src) => {
-      const image = new window.Image()
-      image.src = src
+    teaserTasks.forEach((task) => {
+      const taskFrames = [
+        task.staticObservation,
+        task.staticAction,
+        ...task.animatedObservations,
+        ...task.animatedActions,
+      ]
+      taskFrames.forEach((src) => {
+        const image = new window.Image()
+        image.src = src
+      })
     })
   }, [])
 
@@ -155,8 +156,8 @@ function App() {
                   <h3 className="teaser-cell-title">Observation</h3>
                   <img
                     className="teaser-image is-observation"
-                    src={staticObservationFrame}
-                    alt="Original drawer opening observation"
+                    src={currentTask.staticObservation}
+                    alt={`Original ${currentTask.label.toLowerCase()} observation`}
                     width="400"
                     height="400"
                   />
@@ -165,8 +166,8 @@ function App() {
                   <h3 className="teaser-cell-title">Action</h3>
                   <img
                     className="teaser-image"
-                    src={staticActionFrame}
-                    alt="Original drawer opening action"
+                    src={currentTask.staticAction}
+                    alt={`Original ${currentTask.label.toLowerCase()} action`}
                     width="400"
                     height="400"
                   />
@@ -178,8 +179,8 @@ function App() {
                   <h3 className="teaser-cell-title">Transformed Observation</h3>
                   <img
                     className="teaser-image is-observation"
-                    src={animatedObservationFrames[teaserFrameIndex]}
-                    alt={`Drawer opening observation frame ${teaserFrameIndex}`}
+                    src={currentTask.animatedObservations[teaserFrameIndex]}
+                    alt={`${currentTask.label} observation frame ${teaserFrameIndex}`}
                     width="400"
                     height="400"
                   />
@@ -188,8 +189,8 @@ function App() {
                   <h3 className="teaser-cell-title">Transformed Action</h3>
                   <img
                     className="teaser-image"
-                    src={animatedActionFrames[teaserFrameIndex]}
-                    alt={`Drawer opening action frame ${teaserFrameIndex}`}
+                    src={currentTask.animatedActions[teaserFrameIndex]}
+                    alt={`${currentTask.label} action frame ${teaserFrameIndex}`}
                     width="400"
                     height="400"
                   />
@@ -229,6 +230,29 @@ function App() {
               />
               <output htmlFor="reflection-angle-slider">{reflectionAngle}°</output>
             </div>
+            <div className="teaser-task-selector" role="tablist" aria-label="Demonstration task">
+              {teaserTasks.map((task) => {
+                const isActive = task.id === selectedTaskId
+                return (
+                  <button
+                    key={task.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={isActive}
+                    className={`teaser-task-button${isActive ? ' is-active' : ''}`}
+                    onClick={() => setSelectedTaskId(task.id)}
+                  >
+                    {task.label}
+                  </button>
+                )
+              })}
+            </div>
+            <figcaption>
+              Given an observation–action pair (<em>o</em>, <em>a</em>), MIRROR produces a symmetric counterpart:
+              the observation is reflected to a rotated scene, and the in-plane action components
+              (Δ<em>x</em>, Δ<em>y</em>) are reflected consistently with the observation, while the remaining
+              components are unchanged.
+            </figcaption>
           </figure>
         </div>
       </section>
@@ -247,38 +271,35 @@ function App() {
       <section className="section">
         <div className="container is-max-widescreen">
           <h2 className="title">Method Overview</h2>
+          <figure className="method-figure">
+            <img src={`${imgBase}/fig_pipeline_v1.png`} alt="MIRROR pipeline overview" />
+          </figure>
           <p className="lead">
-            Describe the system at a high level before moving into implementation details. Use this area for a concise
-            pipeline figure, algorithm sketch, or set of design choices.
+            MIRROR follows a two-stage latent symmetry discovery process. <strong>Stage 1</strong> pretrains a
+            frozen spherical autoencoder (<em>E</em><sub>o</sub>, <em>D</em><sub>o</sub>) that compresses each
+            observation into a latent <em>z</em>. <strong>Stage 2</strong> learns symmetry modules
+            (<em>E</em><sub>z</sub>, <em>D</em><sub>z</sub>) and (<em>E</em><sub>a</sub>, <em>D</em><sub>a</sub>)
+            that map <em>z</em> and the action <em>a</em> into latents on which a linear representation of the
+            group <em>G</em> acts; these modules are trained by adversarial tuple matching together with a
+            group-consistency regularizer.
           </p>
-          <div className="overview-grid">
-            {highlights.map((item) => (
-              <article className="overview-card" key={item.title}>
-                <h3>{item.title}</h3>
-                <p>{item.text}</p>
-              </article>
-            ))}
-          </div>
         </div>
       </section>
 
       <section className="section results-section">
         <div className="container is-max-widescreen">
           <h2 className="title">Results</h2>
-          <div className="results-grid">
-            <div className="result-panel">
-              <p className="metric">+52%</p>
-              <p>Example improvement over a baseline.</p>
-            </div>
-            <div className="result-panel">
-              <p className="metric">29</p>
-              <p>Example benchmark tasks or evaluation settings.</p>
-            </div>
-            <div className="result-panel">
-              <p className="metric">3x</p>
-              <p>Example speedup, accuracy gain, or efficiency claim.</p>
-            </div>
-          </div>
+          <figure className="results-figure">
+            <img src={`${imgBase}/fig_symmetry_error.png`} alt="Symmetry-quality metric comparison across baselines and MIRROR variants" />
+          </figure>
+          <p className="lead">
+            We evaluate MIRROR against two GAN baselines (SymGAN and LaLiGAN) along with several variants on four
+            symmetry-quality metrics: <strong>Symmetry Invariance</strong>,{' '}
+            <strong>Identity</strong>, <strong>Compatibility</strong>, and{' '}
+            <strong>Invertibility</strong>. MIRROR attains the best aggregate score on
+            Compatibility and Invertibility, reducing compatibility error by ≥61% and invertibility error by
+            ≥39% relative to the GAN baselines.
+          </p>
         </div>
       </section>
 

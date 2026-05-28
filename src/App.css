@@ -131,6 +131,45 @@ sup {
   margin: 0;
 }
 
+.teaser-task-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.teaser-task-button {
+  background: #fff;
+  border: 1px solid #d0d0d0;
+  border-radius: 999px;
+  color: #363636;
+  cursor: pointer;
+  font-family: "Myriad-Pro", "Open Sans", Arial, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.2;
+  padding: 6px 16px;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease;
+}
+
+.teaser-task-button:hover {
+  border-color: #363636;
+}
+
+.teaser-task-button.is-active {
+  background: #363636;
+  border-color: #363636;
+  color: #fff;
+}
+
+.teaser-task-button:focus-visible {
+  outline: 2px solid hsl(121, 100%, 30%);
+  outline-offset: 2px;
+}
+
 .teaser-flow {
   align-items: center;
   display: grid;
@@ -299,7 +338,7 @@ sup {
   line-height: 1.45;
   margin: 12px auto 0;
   max-width: 780px;
-  text-align: center;
+  text-align: left;
 }
 
 .lead {
@@ -308,47 +347,21 @@ sup {
   margin: 0 0 24px;
 }
 
-.overview-grid,
-.results-grid {
-  display: grid;
-  gap: 18px;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+.method-figure,
+.results-figure {
+  margin: 0 auto 24px;
+  max-width: 1100px;
 }
 
-.overview-card,
-.result-panel {
-  background: #fff;
-  border: 1px solid #dedede;
-  border-radius: 8px;
-  padding: 22px;
-}
-
-.overview-card h3 {
-  color: #1a1a1a;
-  font-size: 1.25rem;
-  margin: 0 0 10px;
-}
-
-.overview-card p,
-.result-panel p {
-  margin: 0;
+.method-figure img,
+.results-figure img {
+  display: block;
+  height: auto;
+  width: 100%;
 }
 
 .results-section {
   background: #f7f7f7;
-}
-
-.result-panel {
-  background: #fff;
-  text-align: center;
-}
-
-.metric {
-  color: hsl(121, 100%, 30%);
-  font-size: 2.65rem;
-  font-weight: 700;
-  line-height: 1;
-  margin-bottom: 12px !important;
 }
 
 .citation {
@@ -405,11 +418,6 @@ sup {
   .teaser-cell-title {
     font-size: 0.72rem;
     margin-bottom: -6px;
-  }
-
-  .overview-grid,
-  .results-grid {
-    grid-template-columns: 1fr;
   }
 }
 
