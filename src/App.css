@@ -229,9 +229,46 @@ sup {
   align-items: center;
   display: grid;
   gap: 12px;
-  grid-template-columns: max-content minmax(0, 1fr) 48px;
+  grid-template-columns: 30px max-content minmax(0, 1fr) 48px;
   max-width: 600px;
   width: 100%;
+}
+
+.teaser-play-button {
+  align-items: center;
+  background: #363636;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  display: inline-flex;
+  height: 30px;
+  justify-content: center;
+  padding: 0;
+  width: 30px;
+}
+
+.teaser-play-button:hover {
+  background: #2f2f2f;
+}
+
+.teaser-play-button:focus-visible {
+  outline: 2px solid hsl(121, 100%, 30%);
+  outline-offset: 2px;
+}
+
+.teaser-play-icon {
+  border-bottom: 6px solid transparent;
+  border-left: 10px solid #fff;
+  border-top: 6px solid transparent;
+  display: block;
+  margin-left: 2px;
+}
+
+.teaser-stop-icon {
+  background: #fff;
+  display: block;
+  height: 11px;
+  width: 11px;
 }
 
 .teaser-slider-label {

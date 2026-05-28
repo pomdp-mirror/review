@@ -45,6 +45,7 @@ const highlights = [
 
 function App() {
   const [teaserAngleStep, setTeaserAngleStep] = useState(0)
+  const [isTeaserPlaying, setIsTeaserPlaying] = useState(true)
   const teaserFrameIndex = teaserAngleStep % teaserFrameCount
   const reflectionAngle = teaserAngleStep * (360 / teaserFrameCount)
 
@@ -60,13 +61,19 @@ function App() {
       const image = new window.Image()
       image.src = src
     })
+  }, [])
+
+  useEffect(() => {
+    if (!isTeaserPlaying) {
+      return undefined
+    }
 
     const timerId = window.setInterval(() => {
       setTeaserAngleStep((currentStep) => (currentStep + 1) % (teaserFrameCount + 1))
     }, 180)
 
     return () => window.clearInterval(timerId)
-  }, [])
+  }, [isTeaserPlaying])
 
   return (
     <main>
@@ -190,6 +197,18 @@ function App() {
               </div>
             </div>
             <div className="teaser-slider">
+              <button
+                className="teaser-play-button"
+                type="button"
+                aria-label={isTeaserPlaying ? 'Stop reflection angle autoplay' : 'Play reflection angle autoplay'}
+                aria-pressed={isTeaserPlaying}
+                onClick={() => setIsTeaserPlaying((currentValue) => !currentValue)}
+              >
+                <span
+                  className={isTeaserPlaying ? 'teaser-stop-icon' : 'teaser-play-icon'}
+                  aria-hidden="true"
+                ></span>
+              </button>
               <label className="teaser-slider-label" htmlFor="reflection-angle-slider">
                 Reflection Angle
               </label>
@@ -201,7 +220,12 @@ function App() {
                 max={teaserFrameCount}
                 step="1"
                 value={teaserAngleStep}
-                onChange={(event) => setTeaserAngleStep(Number(event.target.value))}
+                onPointerDown={() => setIsTeaserPlaying(false)}
+                onKeyDown={() => setIsTeaserPlaying(false)}
+                onChange={(event) => {
+                  setIsTeaserPlaying(false)
+                  setTeaserAngleStep(Number(event.target.value))
+                }}
               />
               <output htmlFor="reflection-angle-slider">{reflectionAngle}°</output>
             </div>
