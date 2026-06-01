@@ -4,6 +4,14 @@ import './App.css'
 const teaserFrameCount = 24
 
 const imgBase = `${import.meta.env.BASE_URL}imgs`
+const videoBase = `${import.meta.env.BASE_URL}videos`
+
+const sim2realVideos = [
+  { id: 'drawer_open', label: 'Drawer Opening', file: 'real_exp_drawer_open.mp4' },
+  { id: 'drawer_close', label: 'Drawer Closing', file: 'real_exp_drawer_close.mp4' },
+  { id: 'cube_drop', label: 'Cube Dropping', file: 'real_exp_cube_drop.mp4' },
+  { id: 'hammer_lift', label: 'Hammer Lifting', file: 'real_exp_hammer_lifting.mp4' },
+]
 
 const buildTeaserTasks = (taskDefs, imageSuffix) =>
   taskDefs.map((task) => {
@@ -376,9 +384,89 @@ function App() {
         </div>
       </section>
 
+      <section className="section policy-section">
+        <div className="container is-max-widescreen">
+          <h2 className="title">Equivariant Policy Learning</h2>
+          <p className="lead">
+            The discovered group operations (<em>φ<sub>o</sub></em>, <em>φ<sub>a</sub></em>) plug directly into
+            an equivariant behavior cloning (BC) policy via frame averaging over a discretized cyclic subgroup{' '}
+            <em>H</em> = <em>C<sub>n</sub></em> ⊂ <em>SO</em>(2), trained end-to-end with a standard
+            mean-squared BC objective.
+          </p>
+          <div className="policy-table-wrapper">
+            <table className="policy-table">
+              <caption>
+                Episodic success rates (mean ± std) at the best discretization <em>H</em> = <em>C</em><sub>16</sub>,
+                with vanilla BC as reference. <strong>Bold</strong> marks the best entry per column.
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col">Method</th>
+                  <th scope="col">Drawer Opening</th>
+                  <th scope="col">Drawer Closing</th>
+                  <th scope="col">Cube Dropping</th>
+                  <th scope="col">Hammer Lifting</th>
+                  <th scope="col">Average</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">EBC-ExSym (<em>C</em><sub>16</sub>)</th>
+                  <td>0.6467 ± 0.0222</td>
+                  <td>0.8640 ± 0.0467</td>
+                  <td>0.8093 ± 0.0585</td>
+                  <td>0.8513 ± 0.0573</td>
+                  <td>0.7928 ± 0.0994</td>
+                </tr>
+                <tr>
+                  <th scope="row">EBC-SymGAN (<em>C</em><sub>16</sub>)</th>
+                  <td>0.6627 ± 0.1130</td>
+                  <td>0.8580 ± 0.0358</td>
+                  <td>0.8193 ± 0.0944</td>
+                  <td>0.4980 ± 0.1633</td>
+                  <td>0.7095 ± 0.1807</td>
+                </tr>
+                <tr>
+                  <th scope="row">EBC-LaLiGAN (<em>C</em><sub>16</sub>)</th>
+                  <td>0.6533 ± 0.0204</td>
+                  <td>0.7360 ± 0.0620</td>
+                  <td>0.8447 ± 0.0615</td>
+                  <td>0.6133 ± 0.0557</td>
+                  <td>0.7118 ± 0.1031</td>
+                </tr>
+                <tr className="policy-row-highlight">
+                  <th scope="row">EBC-MIRROR (<em>C</em><sub>16</sub>)</th>
+                  <td><strong>0.7173 ± 0.0136</strong></td>
+                  <td><strong>0.8980 ± 0.0381</strong></td>
+                  <td><strong>0.9026 ± 0.0294</strong></td>
+                  <td><strong>0.8871 ± 0.0249</strong></td>
+                  <td><strong>0.8512 ± 0.0808</strong></td>
+                </tr>
+                <tr className="policy-row-baseline">
+                  <th scope="row">Vanilla BC</th>
+                  <td>0.7140 ± 0.0082</td>
+                  <td>0.8813 ± 0.0589</td>
+                  <td>0.8060 ± 0.0245</td>
+                  <td>0.8180 ± 0.0297</td>
+                  <td>0.8048 ± 0.0695</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p className="lead">
+            <strong>EBC-MIRROR wins every task</strong>, lifting the average success rate from 80.48% (vanilla
+            BC) to <strong>85.12%</strong>, with the largest per-task gain of <strong>+9.66%</strong> on Cube
+            Dropping. Equivariant-BC variants built on hand-designed (EBC-ExSym) or GAN-discovered (EBC-SymGAN,
+            EBC-LaLiGAN) symmetries each fall <em>below</em> vanilla BC on average — equivariance helps only when
+            the underlying symmetry is accurate, so the gain comes from the quality of the discovered symmetry,
+            not from equivariance alone.
+          </p>
+        </div>
+      </section>
+
       <section className="section teaser-section">
         <div className="container is-max-widescreen">
-          <h2 className="title">Different Modality</h2>
+          <h2 className="title">Real-world Observation Modality</h2>
           <TeaserBlock
             tasks={realModalityTasks}
             observationVariant="tall"
@@ -391,6 +479,33 @@ function App() {
               </>
             }
           />
+        </div>
+      </section>
+
+      <section className="section sim2real-section">
+        <div className="container is-max-widescreen">
+          <h2 className="title">Sim2Real</h2>
+          <p className="lead">
+            Real-robot rollouts on a Kinova GEN3 arm. The MIRROR-derived symmetry framework, retrained on a
+            height-map modality, transfers to physical hardware across four tabletop tasks.
+          </p>
+          <div className="sim2real-grid">
+            {sim2realVideos.map((video) => (
+              <figure className="sim2real-item" key={video.id}>
+                <video
+                  className="sim2real-video"
+                  src={`${videoBase}/${video.file}`}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  preload="metadata"
+                  aria-label={`${video.label} real-robot rollout`}
+                />
+                <figcaption>{video.label}</figcaption>
+              </figure>
+            ))}
+          </div>
         </div>
       </section>
 

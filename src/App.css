@@ -449,6 +449,141 @@ sup {
   background: #fff;
 }
 
+.policy-section {
+  background: #fff;
+}
+
+.policy-table-wrapper {
+  margin: 0 auto 24px;
+  max-width: 1100px;
+  overflow-x: auto;
+}
+
+.policy-table {
+  border-collapse: collapse;
+  font-size: 0.98rem;
+  margin: 0 auto;
+  min-width: 720px;
+  width: 100%;
+}
+
+.policy-table caption {
+  caption-side: bottom;
+  color: #555;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  margin-top: 12px;
+  text-align: left;
+}
+
+.policy-table thead th {
+  background: #f6f7f9;
+  border-bottom: 2px solid #cbd5e1;
+  color: #0f172a;
+  font-weight: 600;
+  padding: 10px 14px;
+  text-align: center;
+}
+
+.policy-table thead th:first-child {
+  text-align: left;
+}
+
+.policy-table tbody th {
+  color: #1f2937;
+  font-weight: 600;
+  padding: 10px 14px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.policy-table tbody td {
+  border-bottom: 1px solid #ececef;
+  color: #363636;
+  font-variant-numeric: tabular-nums;
+  padding: 10px 14px;
+  text-align: center;
+}
+
+.policy-table tbody tr:last-child td,
+.policy-table tbody tr:last-child th {
+  border-bottom: 0;
+}
+
+.policy-row-highlight {
+  background: linear-gradient(90deg, rgba(143, 207, 225, 0.18) 0%, rgba(143, 207, 225, 0.10) 100%);
+}
+
+.policy-row-highlight th,
+.policy-row-highlight td {
+  color: #0f172a;
+}
+
+.policy-row-baseline {
+  background: #fafafa;
+  border-top: 2px solid #cbd5e1;
+}
+
+@media (max-width: 760px) {
+  .policy-table {
+    font-size: 0.88rem;
+  }
+
+  .policy-table thead th,
+  .policy-table tbody th,
+  .policy-table tbody td {
+    padding: 8px 10px;
+  }
+}
+
+.sim2real-section {
+  background: #fff;
+}
+
+.sim2real-grid {
+  display: grid;
+  gap: 22px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0 auto;
+  max-width: 1200px;
+}
+
+.sim2real-item {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+
+.sim2real-video {
+  background: #000;
+  border-radius: 14px;
+  box-shadow:
+    0 14px 30px -14px rgba(15, 23, 42, 0.20),
+    0 2px 6px -2px rgba(15, 23, 42, 0.06);
+  display: block;
+  height: auto;
+  width: 100%;
+}
+
+.sim2real-item figcaption {
+  color: #363636;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+@media (max-width: 920px) {
+  .sim2real-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .sim2real-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .citation {
   background: #f5f5f5;
   border-radius: 8px;
